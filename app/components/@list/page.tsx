@@ -10,7 +10,7 @@ import {
 export default function List() {
   return (
     <div>
-      <div>List</div>
+      <div className="flex justify-center items-center">List</div>
     </div>
   );
 }
