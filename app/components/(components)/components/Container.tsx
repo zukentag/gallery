@@ -16,7 +16,10 @@ export default function Container() {
         {componentArray.map((c, index) => (
           <Link key={index} href={`${path}/${c}`}>
             <>
-              <ThreeDCardDemo />
+              <ThreeDCardDemo
+                title={`Component id ${c}`}
+                description={"Demo Description"}
+              />
             </>
           </Link>
         ))}
