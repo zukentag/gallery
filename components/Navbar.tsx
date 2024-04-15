@@ -17,7 +17,7 @@ export const Navbar = () => {
   ];
 
   return (
-    <nav className="py-5 justify-between flex items-center sticky top-0 p-5 backdrop-blur-md ">
+    <nav className="py-5 justify-between flex items-center sticky top-0 p-5 backdrop-blur-[3px] z-10 ">
       <div className="flex items-center">
         <Link href={navLinks[0].href} className="mr-6">
           <h1>{navLinks[0].name}</h1>
