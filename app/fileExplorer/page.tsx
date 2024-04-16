@@ -1,38 +1,40 @@
 "use client";
 
 import React, { useState } from "react";
-import { fileExplorerData } from "@/data/fileExplorerData";
 import { v4 as uuidv4 } from "uuid";
 
 interface Explorer {
-  id: string;
+  itemId: string;
   name: string;
   isFolder: boolean;
   items?: Explorer[];
 }
 
 interface InsertProps {
-  folderId: string;
+  itemId: string;
   name: string;
   isFolder: boolean;
+}
+interface DeleteProps {
+  itemId: string;
 }
 
 const useTraverseTree = () => {
   const insertNode = ({
     tree,
-    folderId,
+    itemId,
     name,
     isFolder,
   }: {
     tree: Explorer;
-    folderId: string;
+    itemId: string;
     name: string;
     isFolder: boolean;
   }) => {
     // Base case
-    if (tree.id === folderId && tree.isFolder) {
+    if (tree.itemId === itemId && tree.isFolder) {
       tree.items?.unshift({
-        id: uuidv4(),
+        itemId: uuidv4(),
         name,
         isFolder,
         items: [],
@@ -44,19 +46,34 @@ const useTraverseTree = () => {
     let latestNode: Explorer[] = [];
     latestNode =
       tree.items?.map((newTree) => {
-        return insertNode({ tree: newTree, folderId, name, isFolder });
+        return insertNode({ tree: newTree, itemId, name, isFolder });
       }) || [];
 
     return { ...tree, items: latestNode };
   };
 
-  return { insertNode };
+  const deleteNode = (tree: Explorer, itemId: string): Explorer | null => {
+    if (tree.itemId === itemId) {
+      return null;
+    }
+
+    if (tree.items) {
+      tree.items = tree.items
+        .map((item) => deleteNode(item, itemId))
+        .filter((item) => item !== null) as Explorer[];
+    }
+
+    return tree;
+  };
+
+  return { insertNode, deleteNode };
 };
 
 const Folder: React.FC<{
   explorer: Explorer;
   handleInsertNode: (props: InsertProps) => void;
-}> = ({ explorer, handleInsertNode }) => {
+  handleDeleteNode: ({ itemId }: { itemId: string }) => void;
+}> = ({ explorer, handleInsertNode, handleDeleteNode }) => {
   const [expand, setExpand] = useState(false);
   const [showInput, setShowInput] = useState({
     visible: false,
@@ -75,11 +92,14 @@ const Folder: React.FC<{
     setExpand(true);
   };
 
+  const handleDeleteFolder = (e: React.MouseEvent<HTMLSpanElement>) => {
+    handleDeleteNode({ itemId: explorer.itemId });
+  };
+
   const onAddNewFolder = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter" && e.currentTarget.value) {
-      // Add logic
       handleInsertNode({
-        folderId: explorer.id,
+        itemId: explorer.itemId,
         name: e.currentTarget.value,
         isFolder: showInput.isFolder,
       });
@@ -94,11 +114,19 @@ const Folder: React.FC<{
           onClick={() => {
             setExpand(!expand);
           }}
-          className="flex justify-between w-[20%] hover:bg-zinc-400  mb-1 p-2"
+          className="flex justify-between w-[30%] hover:bg-zinc-400  mb-1 p-2"
         >
           <span>📁 {explorer.name}</span>
           <div>
             <span
+              onClick={(e) => {
+                handleDeleteFolder(e);
+              }}
+            >
+              🚫
+            </span>
+            <span
+              className="ml-4"
               onClick={(e) => {
                 handleAddNewFolder(e, false);
               }}
@@ -132,41 +160,76 @@ const Folder: React.FC<{
             )}
             {explorer.items?.map((item) => (
               <Folder
-                key={item.id}
+                key={item.itemId}
                 explorer={item}
                 handleInsertNode={handleInsertNode}
+                handleDeleteNode={handleDeleteNode}
               />
             ))}
           </div>
         )}
       </div>
     );
-  } else {
+  } else if (explorer.name) {
     return (
-      <div className="flex-col w-[20%] hover:bg-zinc-400 mb-1 p-2">
-        <span>📄 {explorer.name}</span>
+      <div className="flex justify-between w-[30%] hover:bg-zinc-400 mb-1 p-2">
+        <div className=" ">
+          <span>📄 {explorer.name}</span>
+        </div>
+        <div>
+          <span
+            onClick={(e) => {
+              handleDeleteFolder(e);
+            }}
+          >
+            🚫
+          </span>
+        </div>
       </div>
     );
   }
 };
 
 const FileExplorer: React.FC = () => {
-  const [explorerData, setExplorerData] = useState<Explorer>(fileExplorerData);
-  const { insertNode } = useTraverseTree();
+  const [explorerData, setExplorerData] = useState<Explorer>({
+    itemId: uuidv4(),
+    name: "Root",
+    isFolder: true,
+    items: [],
+  });
+  const { insertNode, deleteNode } = useTraverseTree();
 
-  const handleInsertNode = ({ folderId, name, isFolder }: InsertProps) => {
+  const handleInsertNode = ({ itemId, name, isFolder }: InsertProps) => {
     const finalTree = insertNode({
       tree: explorerData,
-      folderId,
+      itemId,
       name,
       isFolder,
     });
     setExplorerData(finalTree);
   };
 
+  const handleDeleteNode = ({ itemId }: { itemId: string }) => {
+    if (itemId === explorerData.itemId) {
+      setExplorerData((prevExplorerData) => ({
+        ...prevExplorerData,
+        items: [],
+      }));
+    } else {
+      const finalTree = deleteNode({ ...explorerData }, itemId);
+      if (finalTree) {
+        setExplorerData(finalTree);
+      }
+    }
+  };
+
   return (
     <div className="p-5">
-      <Folder handleInsertNode={handleInsertNode} explorer={explorerData} />
+      <Folder
+        handleInsertNode={handleInsertNode}
+        handleDeleteNode={handleDeleteNode}
+        explorer={explorerData}
+      />
     </div>
   );
 };
