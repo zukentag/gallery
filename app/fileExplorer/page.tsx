@@ -94,7 +94,7 @@ const Folder: React.FC<{
           onClick={() => {
             setExpand(!expand);
           }}
-          className="flex justify-between w-[20%] hover:bg-gray-200 mb-1 p-2"
+          className="flex justify-between w-[20%] hover:bg-zinc-400  mb-1 p-2"
         >
           <span>📁 {explorer.name}</span>
           <div>
@@ -143,7 +143,7 @@ const Folder: React.FC<{
     );
   } else {
     return (
-      <div className="flex-col w-[20%] hover:bg-gray-200 mb-1 p-2 ">
+      <div className="flex-col w-[20%] hover:bg-zinc-400 mb-1 p-2">
         <span>📄 {explorer.name}</span>
       </div>
     );
