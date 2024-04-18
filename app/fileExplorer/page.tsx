@@ -15,9 +15,6 @@ interface InsertProps {
   name: string;
   isFolder: boolean;
 }
-interface DeleteProps {
-  itemId: string;
-}
 
 const useTraverseTree = () => {
   const insertNode = ({
@@ -66,18 +63,48 @@ const useTraverseTree = () => {
     return tree;
   };
 
-  return { insertNode, deleteNode };
+  const editNode = ({
+    tree,
+    itemId,
+    name,
+  }: {
+    tree: Explorer;
+    itemId: string;
+    name: string;
+  }): Explorer => {
+    // Create a shallow copy of the current tree node
+    const updatedTree = { ...tree };
+
+    // If the current node is the one to be edited, update its name
+    if (updatedTree.itemId === itemId) {
+      updatedTree.name = name;
+      return updatedTree;
+    }
+
+    // If the current node has child items, recursively edit them
+    if (updatedTree.items) {
+      updatedTree.items = updatedTree.items.map((item) =>
+        editNode({ tree: item, itemId, name })
+      );
+    }
+
+    return updatedTree;
+  };
+
+  return { insertNode, deleteNode, editNode };
 };
 
 const Folder: React.FC<{
   explorer: Explorer;
   handleInsertNode: (props: InsertProps) => void;
   handleDeleteNode: ({ itemId }: { itemId: string }) => void;
-}> = ({ explorer, handleInsertNode, handleDeleteNode }) => {
+  handleEditNode: (itemId: string, name: string) => void;
+}> = ({ explorer, handleInsertNode, handleDeleteNode, handleEditNode }) => {
   const [expand, setExpand] = useState(false);
   const [showInput, setShowInput] = useState({
     visible: false,
     isFolder: false,
+    itemId: "",
   });
 
   const handleAddNewFolder = (
@@ -85,15 +112,30 @@ const Folder: React.FC<{
     isFolder: boolean
   ) => {
     e.stopPropagation();
+
     setShowInput({
+      ...showInput,
       visible: true,
-      isFolder,
+      isFolder: isFolder,
     });
     setExpand(true);
   };
 
   const handleDeleteFolder = (e: React.MouseEvent<HTMLSpanElement>) => {
     handleDeleteNode({ itemId: explorer.itemId });
+  };
+
+  const handleEditFolder = (
+    e: React.MouseEvent<HTMLSpanElement>,
+    isFolder: boolean
+  ) => {
+    // e.stopPropagation();
+    setShowInput({
+      ...showInput,
+      visible: true,
+      isFolder: isFolder,
+      itemId: explorer.itemId,
+    });
   };
 
   const onAddNewFolder = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -107,6 +149,13 @@ const Folder: React.FC<{
     }
   };
 
+  const onEditFolder = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter" && e.currentTarget.value) {
+      handleEditNode(explorer.itemId, e.currentTarget.value);
+      setShowInput({ ...showInput, visible: false, itemId: "" });
+    }
+  };
+
   if (explorer.isFolder) {
     return (
       <div className="cursor-pointer">
@@ -114,39 +163,65 @@ const Folder: React.FC<{
           onClick={() => {
             setExpand(!expand);
           }}
-          className="flex justify-between w-[30%] hover:bg-zinc-400  mb-1 p-2"
+          className="flex justify-between w-[70%] md:w-[30%] hover:bg-zinc-400  mb-1 p-2"
         >
-          <span>📁 {explorer.name}</span>
-          <div>
-            <span
-              onClick={(e) => {
-                handleDeleteFolder(e);
-              }}
-            >
-              🚫
-            </span>
-            <span
-              className="ml-4"
-              onClick={(e) => {
-                handleAddNewFolder(e, false);
-              }}
-            >
-              🗒
-            </span>
-            <span
-              className="ml-4"
-              onClick={(e) => {
-                handleAddNewFolder(e, true);
-              }}
-            >
-              🗀
-            </span>
-          </div>
+          {showInput.visible && explorer.itemId === showInput.itemId ? (
+            <>
+              <span>{showInput.isFolder === true ? "📁 " : "📄"}</span>
+              <input
+                type="text"
+                autoFocus
+                onKeyDown={(e) => onEditFolder(e)}
+                onBlur={() => {
+                  setShowInput({ ...showInput, visible: false, itemId: "" });
+                }}
+                className="w-full"
+              />
+            </>
+          ) : (
+            <>
+              <span>📁 {explorer.name}</span>
+              <div>
+                <span
+                  onClick={(e) => {
+                    handleEditFolder(e, explorer.isFolder);
+                  }}
+                >
+                  ✏️
+                </span>
+                <span
+                  onClick={(e) => {
+                    handleDeleteFolder(e);
+                  }}
+                  className="ml-4"
+                >
+                  🚫
+                </span>
+                <span
+                  className="ml-4"
+                  onClick={(e) => {
+                    handleAddNewFolder(e, false);
+                  }}
+                >
+                  🗒
+                </span>
+                <span
+                  className="ml-4"
+                  onClick={(e) => {
+                    handleAddNewFolder(e, true);
+                  }}
+                >
+                  🗀
+                </span>
+              </div>
+            </>
+          )}
         </div>
+
         {expand && (
-          <div className="pl-5">
+          <div className=" pl-5">
             {showInput.visible && (
-              <div className="mb-1 p-2">
+              <div className="flex justify-between w-[70%] md:w-[30%]  mb-1 p-2">
                 <span>{showInput.isFolder === true ? "📁 " : "📄"}</span>
                 <input
                   type="text"
@@ -155,6 +230,7 @@ const Folder: React.FC<{
                   onBlur={() => {
                     setShowInput({ ...showInput, visible: false });
                   }}
+                  className="w-full"
                 />
               </div>
             )}
@@ -164,6 +240,7 @@ const Folder: React.FC<{
                 explorer={item}
                 handleInsertNode={handleInsertNode}
                 handleDeleteNode={handleDeleteNode}
+                handleEditNode={handleEditNode}
               />
             ))}
           </div>
@@ -172,7 +249,7 @@ const Folder: React.FC<{
     );
   } else if (explorer.name) {
     return (
-      <div className="flex justify-between w-[30%] hover:bg-zinc-400 mb-1 p-2">
+      <div className="flex justify-between w-[70%] md:w-[30%] hover:bg-zinc-400 mb-1 p-2">
         <div className=" ">
           <span>📄 {explorer.name}</span>
         </div>
@@ -197,7 +274,7 @@ const FileExplorer: React.FC = () => {
     isFolder: true,
     items: [],
   });
-  const { insertNode, deleteNode } = useTraverseTree();
+  const { insertNode, deleteNode, editNode } = useTraverseTree();
 
   const handleInsertNode = ({ itemId, name, isFolder }: InsertProps) => {
     const finalTree = insertNode({
@@ -223,11 +300,22 @@ const FileExplorer: React.FC = () => {
     }
   };
 
+  const handleEditNode = (itemId: string, name: string) => {
+    const updatedExplorerData = editNode({
+      tree: explorerData,
+      itemId,
+      name,
+    });
+
+    setExplorerData(updatedExplorerData);
+  };
+
   return (
-    <div className="p-5">
+    <div className="p-1 md:p-5">
       <Folder
         handleInsertNode={handleInsertNode}
         handleDeleteNode={handleDeleteNode}
+        handleEditNode={handleEditNode}
         explorer={explorerData}
       />
     </div>
