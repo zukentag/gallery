@@ -1,16 +1,19 @@
 "use client";
 
 import Image from "next/image";
-import React from "react";
-import Temp from "@/public/temp.jpg";
+import React, { ReactComponentElement } from "react";
+
 import { CardBody, CardContainer, CardItem } from "../ui/3d-card";
+import { StaticImageData } from "next/image";
 
 export function ThreeDCardDemo({
   title,
   description,
+  image,
 }: {
   title: string;
   description: string;
+  image: StaticImageData;
 }) {
   return (
     <CardContainer className="inter-var w-[20rem] lg:w-[50rem]">
@@ -35,10 +38,10 @@ export function ThreeDCardDemo({
           className="w-full mt-2"
         >
           <Image
-            src={Temp}
+            src={image}
             height="500"
             width="500"
-            className="h-[8rem] w-[20rem] object-cover rounded-xl group-hover/card:shadow-xl"
+            className="h-[12rem] w-[20rem] object-cover rounded-xl group-hover/card:shadow-xl"
             alt="thumbnail"
           />
         </CardItem>

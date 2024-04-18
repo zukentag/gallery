@@ -5,23 +5,26 @@ import Link from "next/link";
 import { ThreeDCardDemo } from "@/components/ui/3d-card_rotate";
 import { usePathname } from "next/navigation";
 
-const componentArray = ["1", "2", "3", "4"];
+import componentArray from "@/data/common/componentsData";
 
 export default function Container() {
   const path = usePathname();
   return (
-    <div className="flex flex-col h-screen">
+    <div className="flex flex-col ">
       <div className="grid grid-cols-1 lg:grid-cols-2 items-center justify-center overflow-hidden">
-        {componentArray.map((c, index) => (
-          <Link key={index} href={`${path}/${c}`}>
-            <>
-              <ThreeDCardDemo
-                title={`Component id ${c}`}
-                description={"Demo Description"}
-              />
-            </>
-          </Link>
-        ))}
+        {componentArray.map((c, index) => {
+          return (
+            <Link key={index} href={`${path}/${c.id}`}>
+              <>
+                <ThreeDCardDemo
+                  title={c.title}
+                  description={c.description}
+                  image={c.image}
+                />
+              </>
+            </Link>
+          );
+        })}
       </div>
     </div>
   );
