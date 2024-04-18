@@ -250,18 +250,43 @@ const Folder: React.FC<{
   } else if (explorer.name) {
     return (
       <div className="flex justify-between w-[70%] md:w-[30%] hover:bg-zinc-400 mb-1 p-2">
-        <div className=" ">
-          <span>📄 {explorer.name}</span>
-        </div>
-        <div>
-          <span
-            onClick={(e) => {
-              handleDeleteFolder(e);
-            }}
-          >
-            🚫
-          </span>
-        </div>
+        {showInput.visible && explorer.itemId === showInput.itemId ? (
+          <>
+            <span>{showInput.isFolder === true ? "📁 " : "📄"}</span>
+            <input
+              type="text"
+              autoFocus
+              onKeyDown={(e) => onEditFolder(e)}
+              onBlur={() => {
+                setShowInput({ ...showInput, visible: false, itemId: "" });
+              }}
+              className="w-full"
+            />
+          </>
+        ) : (
+          <>
+            <div>
+              <span>📄 {explorer.name}</span>
+            </div>
+            <div>
+              <span
+                onClick={(e) => {
+                  handleEditFolder(e, explorer.isFolder);
+                }}
+              >
+                ✏️
+              </span>
+              <span
+                onClick={(e) => {
+                  handleDeleteFolder(e);
+                }}
+                className="ml-4"
+              >
+                🚫
+              </span>
+            </div>
+          </>
+        )}
       </div>
     );
   }
