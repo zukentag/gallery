@@ -1,7 +1,5 @@
 import Temp from "@/public/temp.jpg";
 import fileexplorer from "@/public/fileExplorer.avif";
-import { Component } from "lucide-react";
-import FileExplorer from "@/components/custom/FileExplorer";
 
 const componentsData = [
   {
@@ -11,6 +9,17 @@ const componentsData = [
       "It provides a user-friendly interface for navigating, managing, and interacting with files and folders.",
     image: fileexplorer,
     component: "FileExplorer",
+    code: `import FileExplorer from "@/components/custom/FileExplorer";
+import React from "react";
+
+const FileExplorerComponent = () => {
+  return (
+      <FileExplorer />
+  );
+};
+export default FileExplorerComponent;
+`,
+    language: "Typescript",
   },
   {
     id: "2",

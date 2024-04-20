@@ -336,7 +336,7 @@ const FileExplorer: React.FC = () => {
   };
 
   return (
-    <div className="p-1 md:p-5">
+    <div className="p-1 md:p-5 w-full">
       <Folder
         handleInsertNode={handleInsertNode}
         handleDeleteNode={handleDeleteNode}

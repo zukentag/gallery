@@ -3,15 +3,9 @@
 import React from "react";
 import List from "../(components)/components/List";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { StaticImageData } from "next/image";
+import { CopyBlock, dracula } from "react-code-blocks";
 
 import dynamic from "next/dynamic";
 import componentArray from "@/data/common/componentsData";
@@ -27,6 +21,8 @@ const ComponentPage = ({ params }: { params: { componentId?: string } }) => {
     description: string;
     image: StaticImageData;
     component: string;
+    code: string;
+    language: string;
   };
 
   const FeatureComponent = dynamic(
@@ -56,7 +52,7 @@ const ComponentPage = ({ params }: { params: { componentId?: string } }) => {
                 className="w-[92vw] md:w-[70vw] lg:w-[75vw]"
               >
                 <Card>
-                  <CardContent className="space-y-2">
+                  <CardContent className="space-y-2 min-h-[20rem] flex items-center justify-center dark:bg-dot-white/[0.2] bg-dot-black/[0.2] ">
                     <FeatureComponent />
                   </CardContent>
                 </Card>
@@ -66,27 +62,44 @@ const ComponentPage = ({ params }: { params: { componentId?: string } }) => {
                 className="w-[92vw] md:w-[70vw] lg:w-[75vw]"
               >
                 <Card>
-                  <CardHeader>
-                    <CardTitle>Password</CardTitle>
-                    <CardDescription>
-                      Change your password here. After saving, you'll be logged
-                      out.
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent className="space-y-2">
-                    <div className="space-y-1">
-                      Current password
-                      <input id="current" type="password" />
-                    </div>
-                    <div className="space-y-1">
-                      New password
-                      <input id="new" type="password" />
-                    </div>
+                  <CardContent className="space-y-2 p-5 min-h-[20rem] ">
+                    <CopyBlock
+                      text={component.code}
+                      language={component.language}
+                      showLineNumbers={true}
+                      theme={dracula}
+                    />
                   </CardContent>
-                  <CardFooter>Save password</CardFooter>
                 </Card>
               </TabsContent>
             </Tabs>
+          </div>
+          <div className=" mt-5 p-2">
+            <span className="block text-2xl font-mono">How to use it ? </span>
+            <div className="flex flex-col">
+              <span className="text-1xl mt-5 mb-5 ml-2">1. </span>
+              <Card>
+                <CardContent className="space-y-2 p-2">
+                  <CopyBlock
+                    text={component.code}
+                    language={component.language}
+                    showLineNumbers={true}
+                    theme={dracula}
+                  />
+                </CardContent>
+              </Card>
+              <span className="text-1xl mt-5 mb-5 ml-2">1. </span>
+              <Card>
+                <CardContent className="space-y-2 p-2">
+                  <CopyBlock
+                    text={component.code}
+                    language={component.language}
+                    showLineNumbers={true}
+                    theme={dracula}
+                  />
+                </CardContent>
+              </Card>
+            </div>
           </div>
         </div>
       </div>
