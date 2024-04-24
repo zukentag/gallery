@@ -1,29 +1,54 @@
 "use client";
-import React from "react";
-import { usePathname } from "next/navigation";
+import React, { useEffect, useState } from "react";
 import { ThemeToggle } from "@/components/ui/ThemeToggle";
 
 import Link from "next/link";
 export const Navbar = () => {
   const navLinks = [
     {
-      name: "Dev Gallery",
+      name: "Gallery",
       href: "/",
+      symbol: "</>",
     },
     {
       name: "Components",
       href: "/components",
     },
   ];
+  const [isScrolled, setIsScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollTop = window.scrollY;
+      setIsScrolled(scrollTop > 0);
+    };
+
+    window.addEventListener("scroll", handleScroll);
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
 
   return (
-    <nav className="py-5 justify-between flex items-center sticky top-0 p-5 backdrop-blur-[3px] z-10 ">
+    <nav
+      className={`py-5 justify-between flex items-center sticky top-0 p-5 z-10  ${
+        isScrolled ? "backdrop-blur-[3px]" : "bg-slate-50"
+      }`}
+    >
       <div className="flex items-center">
         <Link href={navLinks[0].href} className="mr-6">
-          <h1>{navLinks[0].name}</h1>
+          <div className="flex gap-2">
+            <h1 className="text-2xl font-mono font-bold">
+              {navLinks[0].symbol}
+            </h1>
+            <h1 className="hidden md:block md:text-2xl md:font-mono md:font-bold md:underline md:underline-offset-8 md:decoration-green-500">
+              {navLinks[0].name}
+            </h1>
+          </div>
         </Link>
 
-        <div className="flex">
+        <div className="ml-10 flex items-center">
           {navLinks.slice(1).map((link, index) => (
             <Link
               key={index}
