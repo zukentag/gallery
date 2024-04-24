@@ -77,7 +77,7 @@ export default function List() {
               <>
                 <div
                   key={ind}
-                  className=" font-sans text-[1.25rem] mb-2 text-pretty text-slate-500 hover:text-blue-600"
+                  className="text-[1rem] mb-2  text-slate-500 hover:text-green-500"
                 >
                   {l}
                 </div>

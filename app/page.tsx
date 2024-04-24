@@ -6,35 +6,70 @@ import {
   CarouselContent,
   CarouselItem,
 } from "@/components/ui/carousel";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { CardBody, CardContainer, CardItem } from "@/components/ui/3d-card";
+
+import NextSvg from "@/public/next.svg";
+import ReactSvg from "@/public/react.svg";
+import TailwindSvg from "@/public/tailwind.svg";
+import TypescriptSvg from "@/public/typescript.svg";
 import Autoplay from "embla-carousel-autoplay";
 import componentArray from "@/data/common/componentsData";
 import Image from "next/image";
-import { CardBody, CardContainer, CardItem } from "@/components/ui/3d-card";
 
 export default function page() {
   const plugin = useRef(
-    Autoplay({ delay: 2000, stopOnInteraction: true, loop: true })
+    Autoplay({
+      delay: 2000,
+      stopOnInteraction: false,
+      stopOnMouseEnter: false,
+      stopOnFocusIn: false,
+    })
   );
   return (
     <div className="min-h-screen dark:bg-grid-white/[0.03] bg-grid-black/[0.03]">
       <div className="flex flex-col md:flex-row mx-auto gap-5 p-5">
-        <div className="text-7xl w-full md:w-[60%] md:ml-5 font-semibold mt-5">
-          Your Ultimate Destination for
-          <span className="  text-green-500 hover:text-yellow-300 ">
-            {" "}
-            Functional{" "}
-          </span>
-          and Trending
+        <div className="w-full md:w-[60%] md:ml-5 mt-5">
+          <div className="text-7xl font-semibold ">
+            Your Ultimate Destination for
+            <span className="  text-green-500 hover:text-yellow-300 ">
+              {" "}
+              Functional{" "}
+            </span>
+            and Trending
+            <br />
+            <span className=" text-green-500 hover:text-yellow-300">
+              {" "}
+              UI Components{" "}
+            </span>
+          </div>
           <br />
-          <span className=" text-green-500 hover:text-yellow-300">
-            {" "}
-            UI Components{" "}
-          </span>
+          <div className="text-2xl">
+            Copy paste components and use them in your websites without having
+            to worry about functioning
+          </div>
+          <div className="flex flex-row gap-4 mt-4">
+            <div className="flex justify-center items-center gap-2">
+              <Image src={NextSvg} height={30} width={30} alt="Next.js" />
+              <span>Next.js</span>
+            </div>
+            <div className="flex justify-center items-center gap-2">
+              <Image src={ReactSvg} height={30} width={30} alt="Next.js" />
+              <span>React</span>
+            </div>
+            <div className="flex justify-center items-center gap-2">
+              <Image src={TailwindSvg} height={30} width={30} alt="Next.js" />
+              <span>Tailwind</span>
+            </div>
+            <div className="flex justify-center items-center gap-2">
+              <Image src={TypescriptSvg} height={30} width={30} alt="Next.js" />
+              <span>Typescript</span>
+            </div>
+          </div>
         </div>
         <div className="flex items-center justify-center">
           <Carousel
             plugins={[plugin.current]}
+            opts={{ loop: true }}
             className=" w-full max-w-md"
             onMouseEnter={plugin.current.stop}
             onMouseLeave={plugin.current.reset}
@@ -80,22 +115,3 @@ export default function page() {
     </div>
   );
 }
-// <Card className="flex flex-col justify-center items-center w-full min-h-[60vh] bg-white shadow-lg rounded-lg overflow-hidden">
-//   {/* <CardHeader className="text-xl font-bold py-4">
-//                   {c.title}
-//                 </CardHeader> */}
-//   <div className="h-[10rem] w-[20rem]">
-//     <Image
-//       src={c.image}
-//       width={200}
-//       height={200}
-//       layout="responsive"
-//       // objectFit="true"
-//       alt="image-card"
-//       className="mb-4"
-//     />
-//   </div>
-//   <CardContent className="flex flex-col justify-center items-center">
-//     <p className="text-gray-700 text-center px-6">{c.description}</p>
-//   </CardContent>
-// </Card>;

@@ -3,7 +3,7 @@ import React from "react";
 
 export const Footer = () => {
   return (
-    <div className="w-full h-[5rem] border-2 p-5 bg-slate-50 ">
+    <div className="w-full h-[5rem] border-2 p-5  ">
       <div className="flex items-center justify-between">
         <div>
           <Link href={"/"} className="mr-6">

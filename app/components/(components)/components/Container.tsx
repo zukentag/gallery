@@ -10,8 +10,8 @@ import componentArray from "@/data/common/componentsData";
 export default function Container() {
   const path = usePathname();
   return (
-    <div className="flex flex-col ">
-      <div className="grid grid-cols-1 lg:grid-cols-2 items-center justify-center overflow-hidden">
+    <div className="flex flex-col h-[100vh] overflow-x-hidden  overflow-y-scroll no-scrollbar">
+      <div className="grid grid-cols-1 lg:grid-cols-2 items-center justify-center">
         {componentArray.map((c, index) => {
           return (
             <Link key={index} href={`${path}/${c.id}`}>

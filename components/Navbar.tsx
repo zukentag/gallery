@@ -33,7 +33,7 @@ export const Navbar = () => {
   return (
     <nav
       className={`py-5 justify-between flex items-center sticky top-0 p-5 z-10  ${
-        isScrolled ? "backdrop-blur-[3px]" : "bg-slate-50"
+        isScrolled ? "backdrop-blur-[3px]" : ""
       }`}
     >
       <div className="flex items-center">

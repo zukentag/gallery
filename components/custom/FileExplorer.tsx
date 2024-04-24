@@ -28,7 +28,6 @@ const useTraverseTree = () => {
     name: string;
     isFolder: boolean;
   }) => {
-    // Base case
     if (tree.itemId === itemId && tree.isFolder) {
       tree.items?.unshift({
         itemId: uuidv4(),
@@ -72,16 +71,13 @@ const useTraverseTree = () => {
     itemId: string;
     name: string;
   }): Explorer => {
-    // Create a shallow copy of the current tree node
     const updatedTree = { ...tree };
 
-    // If the current node is the one to be edited, update its name
     if (updatedTree.itemId === itemId) {
       updatedTree.name = name;
       return updatedTree;
     }
 
-    // If the current node has child items, recursively edit them
     if (updatedTree.items) {
       updatedTree.items = updatedTree.items.map((item) =>
         editNode({ tree: item, itemId, name })
@@ -129,7 +125,6 @@ const Folder: React.FC<{
     e: React.MouseEvent<HTMLSpanElement>,
     isFolder: boolean
   ) => {
-    // e.stopPropagation();
     setShowInput({
       ...showInput,
       visible: true,
@@ -163,7 +158,7 @@ const Folder: React.FC<{
           onClick={() => {
             setExpand(!expand);
           }}
-          className="flex justify-between w-[70%] md:w-[30%] hover:bg-zinc-400  mb-1 p-2"
+          className="flex justify-between  w-fit hover:bg-zinc-400  mb-1 p-2"
         >
           {showInput.visible && explorer.itemId === showInput.itemId ? (
             <>
@@ -186,6 +181,7 @@ const Folder: React.FC<{
                   onClick={(e) => {
                     handleEditFolder(e, explorer.isFolder);
                   }}
+                  className="ml-4"
                 >
                   ✏️
                 </span>
@@ -221,7 +217,7 @@ const Folder: React.FC<{
         {expand && (
           <div className=" pl-5">
             {showInput.visible && (
-              <div className="flex justify-between w-[70%] md:w-[30%]  mb-1 p-2">
+              <div className="flex justify-between w-fit  mb-1 p-2">
                 <span>{showInput.isFolder === true ? "📁 " : "📄"}</span>
                 <input
                   type="text"
@@ -249,7 +245,7 @@ const Folder: React.FC<{
     );
   } else if (explorer.name) {
     return (
-      <div className="flex justify-between w-[70%] md:w-[30%] hover:bg-zinc-400 mb-1 p-2">
+      <div className="flex justify-between w-fit hover:bg-zinc-400 mb-1 p-2">
         {showInput.visible && explorer.itemId === showInput.itemId ? (
           <>
             <span>{showInput.isFolder === true ? "📁 " : "📄"}</span>
@@ -273,6 +269,7 @@ const Folder: React.FC<{
                 onClick={(e) => {
                   handleEditFolder(e, explorer.isFolder);
                 }}
+                className="ml-4"
               >
                 ✏️
               </span>
