@@ -1,5 +1,5 @@
 import Temp from "@/public/temp.jpg";
-import fileexplorer from "@/public/fileExplorer.avif";
+import fileexplorer from "@/public/fileExplorer1.png";
 
 const componentsData = [
   {

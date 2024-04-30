@@ -2,45 +2,61 @@
 
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
+import { pages } from "next/dist/build/templates/app-page";
 
 interface PaginationItem {
   title: string;
-  description: string;
-  thumbnail: string;
-  // items?: Explorer[];
+  description?: string;
+  thumbnail?: string;
 }
 
-const Page = () => {
-  const [data, setData] = useState([]);
-  const [page, setPage] = useState(2);
+const demoData = [
+  { title: "A", description: "A" },
+  { title: "B", description: "B" },
+  { title: "C", description: "C" },
+  { title: "D", description: "D" },
+  { title: "E", description: "E" },
+  { title: "F", description: "F" },
+  { title: "G", description: "G" },
+];
 
-  const fetchProducts = async () => {
-    const res = await fetch("https://dummyjson.com/products?limit=100");
-
-    const data = await res.json();
-
-    if (data && data.products) {
-      setData(data.products);
-    }
-  };
+const Page = ({
+  paginationData,
+}: {
+  paginationData: PaginationItem[] | null;
+}) => {
+  const [data, setData] = useState<PaginationItem[] | null>(null);
+  const [page, setPage] = useState(1);
+  const [totalPage, setTotalPage] = useState(1);
+  const [limit, setLimit] = useState(3);
 
   useEffect(() => {
-    fetchProducts();
-  }, []);
+    if (paginationData && paginationData.length !== 0) {
+      setData(paginationData);
+      setTotalPage(paginationData.length / limit);
+    } else {
+      setData(demoData);
+      setTotalPage(Math.ceil(demoData.length / limit));
+      console.log("1", Math.ceil(demoData.length / limit));
+    }
+  }, [paginationData]);
+
   console.log(data);
   return (
     <div>
       {data && (
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-10 p-5 items-center justify-center">
+        <div
+          className={`grid grid-cols-1 md:grid-cols-3 gap-10 p-5 items-center justify-center`}
+        >
           {data
-            .slice(page * 10 - 10, page * 10)
+            .slice((page - 1) * limit, page * limit)
             .map((d: PaginationItem, ind: number) => {
               return (
                 <div
                   key={ind}
-                  className="flex-row gap-2 items-center justify-center text-center cursor-pointer"
+                  className="flex-row gap-2 items-center justify-center text-center cursor-pointer border-solid border-2 h-[5rem]"
                 >
-                  <div className="">
+                  {d.thumbnail && (
                     <Image
                       src={d.thumbnail}
                       height={500}
@@ -48,14 +64,59 @@ const Page = () => {
                       className="flex h-[12rem] w-full object-cover"
                       alt={d.title}
                     />
-                  </div>
+                  )}
 
-                  <div className="flex items-center justify-center">
-                    {d.title}
-                  </div>
+                  <div className="text-2xl mt-1">{d.title}</div>
                 </div>
               );
             })}
+        </div>
+      )}
+      {data && data.length > 0 && (
+        <div className="flex justify-center items-center gap-3 cursor-pointer h-[5rem] w-full">
+          <span
+            className={`hover:text-green-500 p-2  ${
+              page === 1 ? " hidden  " : ""
+            }`}
+            onClick={() => {
+              const newPage = page - 1;
+              if (newPage >= 1 && newPage <= data.length / 10) {
+                setPage(newPage);
+              }
+            }}
+          >
+            ◀ Previous
+          </span>
+          {[...Array(totalPage)].map((_, ind) => {
+            return (
+              <span
+                className={`hover:text-green-500 hover:border-solid hover:border-2 p-2 ${
+                  page === ind + 1
+                    ? "text-green-500 border-solid border-2  "
+                    : ""
+                }`}
+                onClick={() => {
+                  setPage(ind + 1);
+                }}
+              >
+                {ind + 1}
+              </span>
+            );
+          })}
+
+          <span
+            className={`hover:text-green-500 p-2  ${
+              page === totalPage ? " hidden  " : ""
+            }`}
+            onClick={() => {
+              const newPage = page + 1;
+              if (newPage >= 1 && newPage <= totalPage) {
+                setPage(newPage);
+              }
+            }}
+          >
+            Next ▶
+          </span>
         </div>
       )}
     </div>
