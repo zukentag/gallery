@@ -61,7 +61,7 @@ export default function page() {
               <span>Tailwind</span>
             </div>
             <div className="flex justify-center items-center gap-2">
-              <Image src={TypescriptSvg} height={30} width={30} alt="Next.js" />
+              <Image src={TypescriptSvg} height={25} width={25} alt="Next.js" />
               <span>Typescript</span>
             </div>
           </div>
@@ -84,7 +84,7 @@ export default function page() {
                     <CardBody className="bg-gray-50 relative group/card w-full md:w-[30rem] sm:w-[30rem] h-auto rounded-xl p-6 border  ">
                       <CardItem
                         translateZ="50"
-                        className="text-xl font-bold text-neutral-600 dark:text-white"
+                        className="text-xl font-bold text-green-500"
                       >
                         {c.title}
                       </CardItem>

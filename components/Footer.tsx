@@ -2,6 +2,7 @@ import Link from "next/link";
 import React from "react";
 
 export const Footer = () => {
+  const currentYear = new Date().getFullYear();
   return (
     <div className="w-full h-[5rem] border-2 p-5  ">
       <div className="flex items-center justify-between">
@@ -14,7 +15,7 @@ export const Footer = () => {
             </div>
           </Link>
         </div>
-        <span> Copyright © 2024 Rahul Raturi</span>
+        <span> Copyright © {currentYear} Rahul Raturi</span>
       </div>
     </div>
   );

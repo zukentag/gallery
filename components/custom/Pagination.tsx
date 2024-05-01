@@ -32,7 +32,7 @@ const Pagination = ({
   useEffect(() => {
     if (paginationData && paginationData.length !== 0) {
       setData(paginationData);
-      setTotalPage(paginationData.length / limit);
+      setTotalPage(Math.ceil(paginationData.length / limit));
     } else {
       setData(demoData);
       setTotalPage(Math.ceil(demoData.length / limit));

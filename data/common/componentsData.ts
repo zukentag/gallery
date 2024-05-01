@@ -376,7 +376,7 @@ export default FileExplorer;
     language: "javascript",
   },
   {
-    id: "2",
+    id: "pagination",
     title: "Pagination",
     description: "Seemless navigation throug Pagination",
     component: "Pagination",
@@ -483,6 +483,12 @@ export default Page;
   },
   {
     id: "4",
+    title: "File Explorer",
+    description: "Demo Description",
+    image: Temp,
+  },
+  {
+    id: "5",
     title: "File Explorer",
     description: "Demo Description",
     image: Temp,

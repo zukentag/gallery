@@ -33,7 +33,7 @@ export const Navbar = () => {
   return (
     <nav
       className={`py-5 justify-between flex items-center sticky top-0 p-5 z-10  ${
-        isScrolled ? "backdrop-blur-[3px]" : ""
+        isScrolled ? "backdrop-blur-[10px]" : ""
       }`}
     >
       <div className="flex items-center">
@@ -42,7 +42,7 @@ export const Navbar = () => {
             <h1 className="text-2xl font-mono font-bold">
               {navLinks[0].symbol}
             </h1>
-            <h1 className="hidden md:block md:text-2xl md:font-mono md:font-bold md:underline md:underline-offset-8 md:decoration-green-500">
+            <h1 className="hidden md:block md:text-2xl md:font-bold md:underline md:underline-offset-8 md:decoration-green-500">
               {navLinks[0].name}
             </h1>
           </div>
@@ -55,7 +55,7 @@ export const Navbar = () => {
               href={link.href}
               className={index !== navLinks.length - 2 ? "mr-6" : ""}
             >
-              <h1>{link.name}</h1>
+              <h1 className=" ">{link.name}</h1>
             </Link>
           ))}
         </div>
