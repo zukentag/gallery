@@ -2,7 +2,6 @@
 
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
-import { pages } from "next/dist/build/templates/app-page";
 
 interface PaginationItem {
   title: string;
@@ -20,7 +19,7 @@ const demoData = [
   { title: "G", description: "G" },
 ];
 
-const Page = ({
+const Pagination = ({
   paginationData,
 }: {
   paginationData: PaginationItem[] | null;
@@ -28,7 +27,7 @@ const Page = ({
   const [data, setData] = useState<PaginationItem[] | null>(null);
   const [page, setPage] = useState(1);
   const [totalPage, setTotalPage] = useState(1);
-  const limit = 3;
+  const [limit, setLimit] = useState(3);
 
   useEffect(() => {
     if (paginationData && paginationData.length !== 0) {
@@ -37,11 +36,9 @@ const Page = ({
     } else {
       setData(demoData);
       setTotalPage(Math.ceil(demoData.length / limit));
-      console.log("1", Math.ceil(demoData.length / limit));
     }
   }, [paginationData]);
 
-  console.log(data);
   return (
     <div>
       {data && (
@@ -54,7 +51,7 @@ const Page = ({
               return (
                 <div
                   key={ind}
-                  className="flex-row gap-2 items-center justify-center text-center cursor-pointer border-solid border-2 h-[5rem]"
+                  className="flex-row gap-2 items-center justify-center text-center cursor-pointer border-solid border-2 p-2"
                 >
                   {d.thumbnail && (
                     <Image
@@ -123,4 +120,4 @@ const Page = ({
   );
 };
 
-export default Page;
+export default Pagination;
