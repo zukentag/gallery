@@ -1,126 +1,143 @@
 "use client";
-
-import React, { useEffect, useState } from "react";
-import Image from "next/image";
-import { pages } from "next/dist/build/templates/app-page";
-
-interface PaginationItem {
+import React, { useState } from "react";
+interface CheckBoxData {
   title: string;
-  description?: string;
-  thumbnail?: string;
+  state: boolean;
+  fields: string;
 }
 
-const demoData = [
-  { title: "A", description: "A" },
-  { title: "B", description: "B" },
-  { title: "C", description: "C" },
-  { title: "D", description: "D" },
-  { title: "E", description: "E" },
-  { title: "F", description: "F" },
-  { title: "G", description: "G" },
-];
+const usePasswordGenerator = () => {
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
 
-const Page = ({
-  paginationData,
-}: {
-  paginationData: PaginationItem[] | null;
-}) => {
-  const [data, setData] = useState<PaginationItem[] | null>(null);
-  const [page, setPage] = useState(1);
-  const [totalPage, setTotalPage] = useState(1);
-  const limit = 3;
+  const generatePassword = (checkBoxData: CheckBoxData[], len: number) => {
+    let charSet = "",
+      generatedPassword = "";
 
-  useEffect(() => {
-    if (paginationData && paginationData.length !== 0) {
-      setData(paginationData);
-      setTotalPage(paginationData.length / limit);
-    } else {
-      setData(demoData);
-      setTotalPage(Math.ceil(demoData.length / limit));
-      console.log("1", Math.ceil(demoData.length / limit));
+    const selectedOptions = checkBoxData.filter(
+      (checkbox) => checkbox.state === true
+    );
+
+    if (selectedOptions.length === 0) {
+      setError("Slect atleast one option");
+      setPassword("");
+      return;
     }
-  }, [paginationData]);
+    selectedOptions.forEach((opttion) => {
+      charSet += opttion.fields;
+    });
 
-  console.log(data);
+    for (let i = 0; i < len; i++) {
+      const randomInd = Math.floor(Math.random() * charSet.length);
+      generatedPassword += charSet[randomInd];
+    }
+
+    setPassword(generatedPassword);
+    setError("");
+  };
+
+  return { password, error, generatePassword };
+};
+
+const page = () => {
+  const { password, error, generatePassword } = usePasswordGenerator();
+  const [len, setLen] = useState<number>(8);
+  const [checkBoxData, setCheckBoxData] = useState([
+    {
+      title: "Uppercase Characters",
+      state: false,
+      fields: "ABCDEFGHIJKLMNOPQRSTUVWXYZ",
+    },
+    {
+      title: "Lowercase Characters",
+      state: false,
+      fields: "abcdefghijklmnopqrstuvwxyz",
+    },
+    {
+      title: "Numeric Characters",
+      state: false,
+      fields: "0123456789",
+    },
+    {
+      title: "Special Characters",
+      state: false,
+      fields: `!"#$%&'()*+,-./:;<=>?@[\]^_\`{|}~`,
+    },
+  ]);
+
+  const handleCheckBoxStateChange = (ind: number) => {
+    setCheckBoxData((prevState) =>
+      prevState.map((item, index) =>
+        index === ind ? { ...item, state: !item.state } : item
+      )
+    );
+  };
+  const handleClick = () => {
+    generatePassword(checkBoxData, len);
+  };
   return (
-    <div>
-      {data && (
-        <div
-          className={`grid grid-cols-1 md:grid-cols-3 gap-10 p-5 items-center justify-center`}
-        >
-          {data
-            .slice((page - 1) * limit, page * limit)
-            .map((d: PaginationItem, ind: number) => {
-              return (
-                <div
-                  key={ind}
-                  className="flex-row gap-2 items-center justify-center text-center cursor-pointer border-solid border-2 h-[5rem]"
-                >
-                  {d.thumbnail && (
-                    <Image
-                      src={d.thumbnail}
-                      height={500}
-                      width={500}
-                      className="flex h-[12rem] w-full object-cover"
-                      alt={d.title}
-                    />
-                  )}
-
-                  <div className="text-2xl mt-1">{d.title}</div>
-                </div>
-              );
-            })}
-        </div>
-      )}
-      {data && data.length > 0 && (
-        <div className="flex justify-center items-center gap-3 cursor-pointer h-[5rem] w-full">
-          <span
-            className={`hover:text-green-500 p-2  ${
-              page === 1 ? " hidden  " : ""
-            }`}
+    <div className="p-5 border-2">
+      {password && (
+        <div className="flex justify-between items-center mb-2">
+          <div className="text-2xl">{password}</div>
+          <button
+            className="p-2 border-2 bg-black text-white rounded"
             onClick={() => {
-              const newPage = page - 1;
-              if (newPage >= 1 && newPage <= data.length / 10) {
-                setPage(newPage);
-              }
+              navigator.clipboard.writeText(password);
             }}
           >
-            ◀ Previous
-          </span>
-          {[...Array(totalPage)].map((_, ind) => {
-            return (
-              <span
-                className={`hover:text-green-500 hover:border-solid hover:border-2 p-2 ${
-                  page === ind + 1
-                    ? "text-green-500 border-solid border-2  "
-                    : ""
-                }`}
-                onClick={() => {
-                  setPage(ind + 1);
-                }}
-              >
-                {ind + 1}
+            Copy
+          </button>
+        </div>
+      )}
+      <div className="flex flex-col gap-1 items-center mb-2">
+        <div className="flex text-left w-full gap-5">
+          <label className="text-2xl ">Character Length : </label>
+          <label className="text-2xl font-medium ">{len}</label>
+        </div>
+        <input
+          className="w-full accent-green-500"
+          type="range"
+          name="charLen"
+          id="charLen"
+          min={6}
+          max={50}
+          value={len}
+          onChange={(e) => {
+            const value = Number(e.target.value);
+            setLen(value);
+          }}
+        />
+      </div>
+      <div className="grid grid-cols-2 mb-2">
+        {checkBoxData.map((item, ind) => {
+          return (
+            <div key={ind} className="flex gap-4 items-center mb-1">
+              <span className="text-2xl">
+                <label> {item.title}</label>
               </span>
-            );
-          })}
-
-          <span
-            className={`hover:text-green-500 p-2  ${
-              page === totalPage ? " hidden  " : ""
-            }`}
-            onClick={() => {
-              const newPage = page + 1;
-              if (newPage >= 1 && newPage <= totalPage) {
-                setPage(newPage);
-              }
-            }}
-          >
-            Next ▶
-          </span>
-        </div>
-      )}
+              <input
+                className="h-5 w-5 accent-green-500"
+                type="checkbox"
+                onChange={() => handleCheckBoxStateChange(ind)}
+                checked={item.state}
+              />
+            </div>
+          );
+        })}
+      </div>
+      <div className="flex flex-col justify-center items-center mt-4">
+        <button
+          className="p-2 border-2 bg-black text-white rounded w-full"
+          type="button"
+          onClick={handleClick}
+        >
+          Generate Password
+        </button>
+        {error && <span className="text-red-500 mt-2">{error}</span>}
+      </div>
     </div>
   );
 };
 
-export default Page;
+export default page;
