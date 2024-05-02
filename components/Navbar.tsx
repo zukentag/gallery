@@ -42,7 +42,7 @@ export const Navbar = () => {
             <h1 className="text-2xl font-mono font-bold">
               {navLinks[0].symbol}
             </h1>
-            <h1 className="hidden md:block md:text-2xl md:font-bold md:underline md:underline-offset-8 md:decoration-green-500">
+            <h1 className="hidden md:block md:text-2xl md:font-bold  text-green-500">
               {navLinks[0].name}
             </h1>
           </div>

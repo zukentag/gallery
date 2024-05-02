@@ -100,7 +100,7 @@ export default function page() {
                           src={c.image}
                           height="1000"
                           width="1000"
-                          className="h-60 w-full object-cover rounded-xl group-hover/card:shadow-xl"
+                          className="h-full w-full object-cover rounded-xl group-hover/card:shadow-xl"
                           alt="thumbnail"
                         />
                       </CardItem>

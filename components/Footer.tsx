@@ -9,7 +9,7 @@ export const Footer = () => {
         <div>
           <Link href={"/"} className="mr-6">
             <div className="flex gap-2">
-              <h1 className="text-2xl font-mono font-bold  underline underline-offset-8  decoration-green-500">
+              <h1 className="text-2xl font-mono font-bold text-green-500">
                 &lt;/&gt;
               </h1>
             </div>

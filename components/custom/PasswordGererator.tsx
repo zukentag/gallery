@@ -77,7 +77,7 @@ const PasswordGererator = () => {
     generatePassword(checkBoxData, len);
   };
   return (
-    <div className="p-5 border-2">
+    <div className="p-2 border-2 bg-gray-100">
       {password && (
         <div className="flex justify-between items-center mb-2">
           <div className="text-2xl">{password}</div>
@@ -115,19 +115,19 @@ const PasswordGererator = () => {
           }}
         />
       </div>
-      <div className="grid grid-cols-2 mb-2">
+      <div className="grid grid-cols-2 mb-2 gap-4">
         {checkBoxData.map((item, ind) => {
           return (
             <div key={ind} className="flex gap-4 items-center mb-1">
-              <span className="text-2xl">
-                <label> {item.title}</label>
-              </span>
               <input
                 className="h-5 w-5 accent-green-500"
                 type="checkbox"
                 onChange={() => handleCheckBoxStateChange(ind)}
                 checked={item.state}
               />
+              <span className="text-2xl">
+                <label> {item.title}</label>
+              </span>
             </div>
           );
         })}

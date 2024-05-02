@@ -77,7 +77,7 @@ const Pagination = ({
             }`}
             onClick={() => {
               const newPage = page - 1;
-              if (newPage >= 1 && newPage <= data.length / 10) {
+              if (newPage >= 1 && newPage <= totalPage) {
                 setPage(newPage);
               }
             }}
