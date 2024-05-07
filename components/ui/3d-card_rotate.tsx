@@ -45,22 +45,14 @@ export function ThreeDCardDemo({
             alt="thumbnail"
           />
         </CardItem>
-        <div className="flex justify-between items-center mt-20">
+        <div className="flex justify-center items-center mt-20">
           <CardItem
             translateZ={20}
             translateX={-40}
             as="button"
             className="px-4 py-2 rounded-xl text-xs font-normal dark:text-white"
           >
-            Try now →
-          </CardItem>
-          <CardItem
-            translateZ={20}
-            translateX={40}
-            as="button"
-            className="px-4 py-2 rounded-xl bg-black dark:bg-white dark:text-black text-white text-xs font-bold"
-          >
-            Sign up
+            Try now 👉
           </CardItem>
         </div>
       </CardBody>
