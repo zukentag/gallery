@@ -37,7 +37,7 @@ const Pagination = ({
       setData(demoData);
       setTotalPage(Math.ceil(demoData.length / limit));
     }
-  }, [paginationData]);
+  }, [paginationData, limit]);
 
   return (
     <div>

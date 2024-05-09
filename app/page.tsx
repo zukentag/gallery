@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useRef, useEffect } from "react";
+import React, { useRef } from "react";
 import {
   Carousel,
   CarouselContent,
@@ -16,25 +16,15 @@ import Autoplay from "embla-carousel-autoplay";
 import componentArray from "@/data/common/componentsData";
 import Image from "next/image";
 
-export default function page() {
-  const plugin = useRef<any>(null);
-
-  useEffect(() => {
-    const autoplayInstance = Autoplay({
+export default function Page() {
+  const plugin = useRef(
+    Autoplay({
       delay: 2000,
       stopOnInteraction: false,
       stopOnMouseEnter: false,
       stopOnFocusIn: false,
-    });
-
-    plugin.current = autoplayInstance;
-
-    return () => {
-      if (plugin.current) {
-        plugin.current.destroy();
-      }
-    };
-  }, []);
+    })
+  );
 
   return (
     <div className="min-h-screen dark:bg-grid-white/[0.03] bg-grid-black/[0.03]">
