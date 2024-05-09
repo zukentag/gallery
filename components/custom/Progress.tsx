@@ -24,9 +24,9 @@ const Progress = ({
   }, 100);
 
   return (
-    <>
-      <div className="p-5 flex justify-center items-center overflow-hidden">
-        <span className="h-[2rem] w-[80%] absolute bg-gray-100 flex justify-center items-center rounded-full dark:text-black overflow-hidden  ">
+    <div className="flex flex-col gap-6 ">
+      <div className="p-5 flex justify-center items-center overflow-hidden ">
+        <span className="h-[2rem] w-[50%] absolute bg-gray-100 flex justify-center items-center rounded-full dark:text-black overflow-hidden  ">
           <span
             className={`absolute z-50 ${
               parseFloat(percent.toFixed()) <= 49 ? "text-black" : "text-white"
@@ -52,7 +52,7 @@ const Progress = ({
           <span className="p-2 scale-150 cursor-pointer">↻</span>
         </div>
       )}
-    </>
+    </div>
   );
 };
 

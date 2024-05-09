@@ -2,6 +2,7 @@ import Temp from "@/public/temp.jpg";
 import fileexplorer from "@/public/fileExplorer.png";
 import pagination from "@/public/pagination.png";
 import passwordGenerator from "@/public/passwordGenerator.png";
+import progressBar from "@/public/progressBar.png";
 import components from "@/app/components/page";
 
 const componentsData = [
@@ -649,10 +650,105 @@ export default PasswordGererator;
     language: "javascript",
   },
   {
-    id: "4",
-    title: "File Explorer",
-    description: "Demo Description",
-    image: Temp,
+    id: "progress-bar",
+    title: "Progress Bar",
+    description: "Track your progress, like never before",
+    image: progressBar,
+    component: "Progress",
+    language: "javascript",
+    meta: "components/ui/Progress.tsx",
+    code: `import Progess from "@/components/custom/Progess";
+import React from "react";
+
+const ProgessBar = () => {
+  const [value, setValue] = useState<number>(0);
+  const [success, setSuccess] = useState<boolean>(false);
+
+  useEffect(() => {
+    setInterval(() => {
+      setValue((value) => value + 1);
+    }, 100);
+  }, []);
+
+  return (
+    <>
+      <Progress
+        value={value}
+        onComplete={() => {
+          setValue(0);
+        }}
+      />
+    </>
+  );
+};
+export default ProgessBar;
+`,
+    sourceCode: `
+    "use client";
+  import React, { useEffect, useState } from "react";
+
+  const Progress = ({
+    value = 0,
+    onComplete,
+  }: {
+    value: number;
+    onComplete: () => void;
+  }) => {
+    const [percent, setPercent] = useState<number>(value);
+    const [success, setSuccess] = useState<boolean>(false);
+
+    useEffect(() => {
+      setPercent(Math.min(100, Math.max(0, value)));
+
+      if (value >= 100) {
+        setSuccess(true);
+      }
+    }, [value]);
+
+    useEffect(() => {
+      const interval = setInterval(() => {
+        setPercent(prevPercent => {
+          const newValue = prevPercent + 1;
+          return Math.min(100, newValue);
+        });
+      }, 100);
+
+      return () => clearInterval(interval);
+    }, []);
+
+    return (
+      <>
+        <div className="p-5 flex justify-center items-center overflow-hidden">
+          <span className="h-[2rem] w-[80%] relative bg-gray-100 flex justify-center items-center rounded-full dark:text-black overflow-hidden">
+            <span
+              className={\`absolute z-50 \${parseFloat(percent.toFixed()) <= 49 ? "text-black" : "text-white"}\`}
+            >
+              {percent.toFixed()}%
+            </span>
+
+            <div
+              className="h-[2rem] left-0 absolute bg-green-500 w-auto"
+              style={{ width: \`\${percent.toFixed()}%\` }}
+            ></div>
+          </span>
+        </div>
+        {success && (
+          <div
+            className="flex justify-center items-center"
+            onClick={() => {
+              onComplete();
+              setSuccess(false);
+            }}
+          >
+            <span className="p-2 scale-150 cursor-pointer">↻</span>
+          </div>
+        )}
+      </>
+    );
+  };
+
+  export default Progress;
+`,
   },
   {
     id: "5",

@@ -62,7 +62,7 @@ const ComponentPage = ({ params }: { params: { componentId?: string } }) => {
                 className="w-[92vw] md:w-[70vw] lg:w-[75vw]"
               >
                 <Card>
-                  <CardContent className="space-y-2 min-h-[20rem] flex items-center justify-center dark:bg-grid-white/[0.04] bg-grid-black/[0.04] ">
+                  <CardContent className="space-y-2 min-h-[20rem] flex items-center justify-center dark:bg-grid-white/[0.04] bg-grid-black/[0.04] relative">
                     <FeatureComponent />
                   </CardContent>
                 </Card>
