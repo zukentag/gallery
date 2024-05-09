@@ -87,6 +87,7 @@ const Pagination = ({
           {[...Array(totalPage)].map((_, ind) => {
             return (
               <span
+                key={ind}
                 className={`hover:text-green-500 hover:border-solid hover:border-2 p-2 ${
                   page === ind + 1
                     ? "text-green-500 border-solid border-2  "

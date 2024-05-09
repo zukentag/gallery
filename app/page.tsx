@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useRef } from "react";
+import React, { useRef, useEffect } from "react";
 import {
   Carousel,
   CarouselContent,
@@ -17,14 +17,23 @@ import componentArray from "@/data/common/componentsData";
 import Image from "next/image";
 
 export default function page() {
-  const plugin = useRef(
-    Autoplay({
+  const plugin = useRef<any>(null);
+
+  useEffect(() => {
+    plugin.current = Autoplay({
       delay: 2000,
       stopOnInteraction: false,
       stopOnMouseEnter: false,
       stopOnFocusIn: false,
-    })
-  );
+    });
+
+    return () => {
+      if (plugin.current) {
+        plugin.current.destroy();
+      }
+    };
+  }, []);
+
   return (
     <div className="min-h-screen dark:bg-grid-white/[0.03] bg-grid-black/[0.03]">
       <div className="flex flex-col md:flex-row mx-auto gap-5 p-5">
