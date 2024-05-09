@@ -750,12 +750,6 @@ export default ProgessBar;
   export default Progress;
 `,
   },
-  {
-    id: "5",
-    title: "File Explorer",
-    description: "Demo Description",
-    image: Temp,
-  },
 ];
 
 export default componentsData;

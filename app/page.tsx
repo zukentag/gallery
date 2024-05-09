@@ -7,11 +7,11 @@ import {
   CarouselItem,
 } from "@/components/ui/carousel";
 import { CardBody, CardContainer, CardItem } from "@/components/ui/3d-card";
+import { FaReact } from "react-icons/fa";
+import { RiNextjsFill } from "react-icons/ri";
+import { SiTypescript } from "react-icons/si";
+import { RiTailwindCssFill } from "react-icons/ri";
 
-import NextSvg from "@/public/next.svg";
-import ReactSvg from "@/public/react.svg";
-import TailwindSvg from "@/public/tailwind.svg";
-import TypescriptSvg from "@/public/typescript.svg";
 import Autoplay from "embla-carousel-autoplay";
 import componentArray from "@/data/common/componentsData";
 import Image from "next/image";
@@ -49,19 +49,23 @@ export default function page() {
           </div>
           <div className="flex flex-row gap-4 mt-4">
             <div className="flex justify-center items-center gap-2">
-              <Image src={NextSvg} height={30} width={30} alt="Next.js" />
+              <RiNextjsFill size={30} color="green" />
+
               <span>Next.js</span>
             </div>
             <div className="flex justify-center items-center gap-2">
-              <Image src={ReactSvg} height={30} width={30} alt="Next.js" />
+              <FaReact color="green" size={30} />
+
               <span>React</span>
             </div>
             <div className="flex justify-center items-center gap-2">
-              <Image src={TailwindSvg} height={30} width={30} alt="Next.js" />
+              <RiTailwindCssFill size={30} color="green" />
+
               <span>Tailwind</span>
             </div>
             <div className="flex justify-center items-center gap-2">
-              <Image src={TypescriptSvg} height={25} width={25} alt="Next.js" />
+              <SiTypescript size={25} color="green" />
+
               <span>Typescript</span>
             </div>
           </div>

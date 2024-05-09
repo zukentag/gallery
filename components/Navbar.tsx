@@ -1,6 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { ThemeToggle } from "@/components/ui/ThemeToggle";
+import socialAcclountsData from "@/data/common/socialsAccounts";
 
 import Link from "next/link";
 export const Navbar = () => {
@@ -60,7 +61,14 @@ export const Navbar = () => {
           ))}
         </div>
       </div>
-      <div>
+      <div className="flex justify-center items-center gap-5">
+        {socialAcclountsData.map((e, ind) => {
+          return (
+            <Link href={e.link} target="_blank" key={ind}>
+              <span className="scale-150">{e.icon}</span>
+            </Link>
+          );
+        })}
         <ThemeToggle />
       </div>
     </nav>
