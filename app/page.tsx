@@ -20,12 +20,14 @@ export default function page() {
   const plugin = useRef<any>(null);
 
   useEffect(() => {
-    plugin.current = Autoplay({
+    const autoplayInstance = Autoplay({
       delay: 2000,
       stopOnInteraction: false,
       stopOnMouseEnter: false,
       stopOnFocusIn: false,
     });
+
+    plugin.current = autoplayInstance;
 
     return () => {
       if (plugin.current) {
