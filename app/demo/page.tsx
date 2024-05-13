@@ -1,81 +1,114 @@
 "use client";
-import React, { useEffect, useState } from "react";
 
-const Progress = ({
-  value = 0,
-  onComplete,
+import React, {
+  ChangeEvent,
+  KeyboardEvent,
+  FormEvent,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
+
+const OTP = ({
+  length,
+  onSubmitFunction,
 }: {
-  value: number;
-  onComplete: () => void;
+  length: number;
+  onSubmitFunction: (otp: string) => string;
 }) => {
-  const [percent, setPercent] = useState<number>(value);
-  const [success, setSuccess] = useState<boolean>(false);
+  const [otp, setOtp] = useState(new Array(length).fill(""));
+  const [succeess, setSucceess] = useState(false);
+
+  const inputRefs = useRef<HTMLInputElement[]>([]);
 
   useEffect(() => {
-    setPercent(Math.min(100, Math.max(0, value)));
-
-    if (value >= 100) {
-      setSuccess(true);
+    if (inputRefs.current[0]) {
+      inputRefs.current[0].focus();
     }
-  }, [value]);
-
-  setInterval(() => {
-    value += 1;
-  }, 100);
-
-  return (
-    <>
-      <div className="p-5 flex justify-center items-center overflow-hidden">
-        <span className="h-[2rem] w-[80%] absolute bg-gray-100 flex justify-center items-center rounded-full dark:text-black overflow-hidden  ">
-          <span
-            className={`absolute z-50 ${
-              parseFloat(percent.toFixed()) <= 49 ? "text-black" : "text-white"
-            }`}
-          >
-            {percent.toFixed()}%
-          </span>
-
-          <div
-            className="h-[2rem] left-0 absolute bg-green-500"
-            style={{ width: `${percent.toFixed()}%` }}
-          ></div>
-        </span>
-      </div>
-      {success && (
-        <div
-          className="flex justify-center items-center"
-          onClick={() => {
-            onComplete();
-            setSuccess(false);
-          }}
-        >
-          <span className="p-2 scale-150 cursor-pointer">↻</span>
-        </div>
-      )}
-    </>
-  );
-};
-
-const ProgessBar = () => {
-  const [value, setValue] = useState<number>(0);
-  const [success, setSuccess] = useState<boolean>(false);
-
-  useEffect(() => {
-    setInterval(() => {
-      setValue((value) => value + 1);
-    }, 100);
   }, []);
 
+  const handleChange = (e: ChangeEvent<HTMLInputElement>, ind: number) => {
+    const val: string = e.target.value;
+
+    if (isNaN(parseInt(val))) {
+      return;
+    }
+
+    const newOtp = [...otp];
+    newOtp[ind] = val.charAt(val.length - 1);
+    setOtp(newOtp);
+
+    const comBinedOtp = newOtp.join("");
+
+    if (comBinedOtp.length === length) {
+      onSubmitFunction(comBinedOtp);
+      setSucceess(true);
+      setTimeout(() => {
+        setSucceess(false);
+        setOtp(new Array(4).fill(""));
+      }, 2000);
+    }
+
+    if (val && ind < length - 1 && inputRefs.current[ind + 1]) {
+      inputRefs.current[ind + 1].focus();
+    }
+  };
+  const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>, ind: number) => {
+    if (e.key === "Backspace") {
+      const newOtp = [...otp];
+      newOtp[ind] = "";
+      setOtp(newOtp);
+      if (ind > 0 && otp[ind - 1] && inputRefs.current[ind - 1]) {
+        inputRefs.current[ind - 1].focus();
+      }
+    }
+  };
+  const handleClick = (ind: number) => {
+    inputRefs.current[ind].setSelectionRange(1, 1);
+  };
+
+  const handleSubmit = (e: FormEvent) => {
+    e.preventDefault();
+  };
+
   return (
-    <>
-      <Progress
-        value={value}
-        onComplete={() => {
-          setValue(0);
-        }}
-      />
-    </>
+    <form
+      onSubmit={handleSubmit}
+      className="p-2 flex flex-col justify-center items-center gap-8 "
+    >
+      <div className="flex gap-4 ">
+        {otp.map((_, ind) => {
+          return (
+            <input
+              type="text"
+              key={ind}
+              ref={(input) => {
+                if (input) {
+                  inputRefs.current[ind] = input;
+                }
+              }}
+              value={otp[ind]}
+              onChange={(e) => handleChange(e, ind)}
+              onClick={() => handleClick(ind)}
+              onKeyDown={(e) => handleKeyDown(e, ind)}
+              className="border-2 w-[4rem] h-[4rem] focus:text-green-500 flex justify-center items-center text-center"
+            />
+          );
+        })}
+      </div>
+      <button type="submit" className="w-[12rem] h-[2rem] bg-black text-white">
+        {succeess ? "Loading..." : "Submit"}
+      </button>
+    </form>
   );
 };
 
-export default ProgessBar;
+const page = () => {
+  const onSubmitFunction = (otp: string) => {
+    console.log("Success", otp);
+    return "Success";
+  };
+  return <OTP length={4} onSubmitFunction={onSubmitFunction} />;
+};
+
+export default page;
