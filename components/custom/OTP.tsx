@@ -104,8 +104,4 @@ const OTP = () => {
   );
 };
 
-const OTPComponent = () => {
-  return <OTP />;
-};
-
-export default OTPComponent;
+export default OTP;

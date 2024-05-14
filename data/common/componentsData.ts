@@ -3,6 +3,7 @@ import fileexplorer from "@/public/fileExplorer.png";
 import pagination from "@/public/pagination.png";
 import passwordGenerator from "@/public/passwordGenerator.png";
 import progressBar from "@/public/progressBar.png";
+import otp from "@/public/otp.png";
 import components from "@/app/components/page";
 
 const componentsData = [
@@ -748,6 +749,133 @@ export default ProgessBar;
   };
 
   export default Progress;
+`,
+  },
+  {
+    id: "otp",
+    title: "OTP",
+    description: "OTP input field",
+    image: otp,
+    component: "OTP",
+    language: "javascript",
+
+    meta: "components/ui/OTP.tsx",
+    code: `import OTP from "@/components/custom/OTP";
+import React from "react";
+
+const OTPComponent = () => {
+  return <OTP />;
+};
+
+export default OTPComponent;
+`,
+    sourceCode: `"use client";
+
+import React, {
+  ChangeEvent,
+  KeyboardEvent,
+  FormEvent,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
+
+const length = 4;
+
+const onSubmitFunction = (otp: string) => {
+  console.log("Success", otp);
+  return "Success";
+};
+
+const OTP = () => {
+  const [otp, setOtp] = useState(new Array(4).fill(""));
+  const [succeess, setSucceess] = useState(false);
+
+  const inputRefs = useRef<HTMLInputElement[]>([]);
+
+  useEffect(() => {
+    if (inputRefs.current[0]) {
+      inputRefs.current[0].focus();
+    }
+  }, []);
+
+  const handleChange = (e: ChangeEvent<HTMLInputElement>, ind: number) => {
+    const val: string = e.target.value;
+
+    if (isNaN(parseInt(val))) {
+      return;
+    }
+
+    const newOtp = [...otp];
+    newOtp[ind] = val.charAt(val.length - 1);
+    setOtp(newOtp);
+
+    const comBinedOtp = newOtp.join("");
+
+    if (comBinedOtp.length === length) {
+      onSubmitFunction(comBinedOtp);
+      setSucceess(true);
+      setTimeout(() => {
+        setSucceess(false);
+        setOtp(new Array(4).fill(""));
+      }, 2000);
+    }
+
+    if (val && ind < length - 1 && inputRefs.current[ind + 1]) {
+      inputRefs.current[ind + 1].focus();
+    }
+  };
+  const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>, ind: number) => {
+    if (e.key === "Backspace") {
+      const newOtp = [...otp];
+      newOtp[ind] = "";
+      setOtp(newOtp);
+      if (ind > 0 && otp[ind - 1] && inputRefs.current[ind - 1]) {
+        inputRefs.current[ind - 1].focus();
+      }
+    }
+  };
+  const handleClick = (ind: number) => {
+    inputRefs.current[ind].setSelectionRange(1, 1);
+  };
+
+  const handleSubmit = (e: FormEvent) => {
+    e.preventDefault();
+  };
+
+  return (
+    <form
+      onSubmit={handleSubmit}
+      className="p-2 flex flex-col justify-center items-center gap-8 "
+    >
+      <div className="flex gap-4 ">
+        {otp.map((_, ind) => {
+          return (
+            <input
+              type="text"
+              key={ind}
+              ref={(input) => {
+                if (input) {
+                  inputRefs.current[ind] = input;
+                }
+              }}
+              value={otp[ind]}
+              onChange={(e) => handleChange(e, ind)}
+              onClick={() => handleClick(ind)}
+              onKeyDown={(e) => handleKeyDown(e, ind)}
+              className="border-2 w-[4rem] h-[4rem] focus:text-green-500 flex justify-center items-center text-center"
+            />
+          );
+        })}
+      </div>
+      <button type="submit" className="w-[12rem] h-[2rem] bg-black text-white">
+        {succeess ? "Loading..." : "Submit"}
+      </button>
+    </form>
+  );
+};
+
+export default OTP;
 `,
   },
 ];
