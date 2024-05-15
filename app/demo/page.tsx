@@ -1,111 +1,67 @@
 "use client";
+import React, { use, useEffect, useState } from "react";
 
-import React, {
-  ChangeEvent,
-  KeyboardEvent,
-  FormEvent,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
+const dummyData = [
+  { id: 1, name: "Walter White" },
+  { id: 2, name: "Jesse Pinkman" },
+  { id: 3, name: "Saul Goodman" },
+  { id: 4, name: "Skyler White" },
+  { id: 5, name: "Hank Schrader" },
+  { id: 6, name: "Mike Ehrmantraut" },
+  { id: 7, name: "Gus Fring" },
+  { id: 8, name: "Tuco Salamanca" },
+  { id: 9, name: "Jane Margolis" },
+  { id: 10, name: "Gale Boetticher" },
+];
 
-const length = 4;
+interface Search {
+  id: number;
+  name: string;
+}
 
-const onSubmitFunction = (otp: string) => {
-  console.log("Success", otp);
-  return "Success";
-};
-
-const OTP = () => {
-  const [otp, setOtp] = useState(new Array(4).fill(""));
-  const [succeess, setSucceess] = useState(false);
-
-  const inputRefs = useRef<HTMLInputElement[]>([]);
+const MultiSelect = () => {
+  const [searchTerm, setSearchTerm] = useState<string>("");
+  const [suggestions, setSuggestions] = useState<Array<Search>>([]);
+  const [selectedUser, setSelectedUser] = useState<Array<Search>>([]);
 
   useEffect(() => {
-    if (inputRefs.current[0]) {
-      inputRefs.current[0].focus();
-    }
-  }, []);
+    const fetchData = () => {
+      if (searchTerm.trim() === "") {
+        setSuggestions([]);
+        return;
+      } else {
+        const filterBySearch = dummyData.filter((item) =>
+          item.name.toLowerCase().includes(searchTerm.toLowerCase())
+        );
 
-  const handleChange = (e: ChangeEvent<HTMLInputElement>, ind: number) => {
-    const val: string = e.target.value;
-
-    if (isNaN(parseInt(val))) {
-      return;
-    }
-
-    const newOtp = [...otp];
-    newOtp[ind] = val.charAt(val.length - 1);
-    setOtp(newOtp);
-
-    const comBinedOtp = newOtp.join("");
-
-    if (comBinedOtp.length === length) {
-      onSubmitFunction(comBinedOtp);
-      setSucceess(true);
-      setTimeout(() => {
-        setSucceess(false);
-        setOtp(new Array(4).fill(""));
-      }, 2000);
-    }
-
-    if (val && ind < length - 1 && inputRefs.current[ind + 1]) {
-      inputRefs.current[ind + 1].focus();
-    }
-  };
-  const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>, ind: number) => {
-    if (e.key === "Backspace") {
-      const newOtp = [...otp];
-      newOtp[ind] = "";
-      setOtp(newOtp);
-      if (ind > 0 && otp[ind - 1] && inputRefs.current[ind - 1]) {
-        inputRefs.current[ind - 1].focus();
+        setSuggestions(filterBySearch);
       }
-    }
-  };
-  const handleClick = (ind: number) => {
-    inputRefs.current[ind].setSelectionRange(1, 1);
-  };
-
-  const handleSubmit = (e: FormEvent) => {
-    e.preventDefault();
-  };
-
+    };
+    fetchData();
+  }, [searchTerm]);
   return (
-    <form
-      onSubmit={handleSubmit}
-      className="p-2 flex flex-col justify-center items-center gap-8 "
-    >
-      <div className="flex gap-4 ">
-        {otp.map((_, ind) => {
+    <div className="p-5 flex flex-col justify-center items-center relative gap-2  ">
+      <input
+        type="text"
+        value={searchTerm}
+        onChange={(e) => setSearchTerm(e.target.value)}
+        placeholder="Search"
+        className="p-2 w-[50%] flex flex-wrap border-solid border-2 outline-none"
+      />
+      <ul className="flex flex-col w-[50%] max-h-[10rem] overflow-y-scroll ml-1 gap-2 text-left">
+        {suggestions?.map((user) => {
           return (
-            <input
-              type="text"
-              key={ind}
-              ref={(input) => {
-                if (input) {
-                  inputRefs.current[ind] = input;
-                }
-              }}
-              value={otp[ind]}
-              onChange={(e) => handleChange(e, ind)}
-              onClick={() => handleClick(ind)}
-              onKeyDown={(e) => handleKeyDown(e, ind)}
-              className="border-2 w-[4rem] h-[4rem] focus:text-green-500 flex justify-center items-center text-center"
-            />
+            <li
+              key={user.id}
+              className="flex items-center p-2 cursor-pointer hover:bg-gray-100 hover:dark:text-black"
+            >
+              {user.name}
+            </li>
           );
         })}
-      </div>
-      <button type="submit" className="w-[12rem] h-[2rem] bg-black text-white">
-        {succeess ? "Loading..." : "Submit"}
-      </button>
-    </form>
+      </ul>
+    </div>
   );
 };
 
-const OTPComponent = () => {
-  return <OTP />;
-};
-
-export default OTPComponent;
+export default MultiSelect;
