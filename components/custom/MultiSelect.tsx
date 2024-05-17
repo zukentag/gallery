@@ -65,8 +65,8 @@ const MultiSelect = () => {
   };
 
   return (
-    <div className="p-5 flex flex-col justify-center items-center relative gap-2  ">
-      <div className="p-2 w-[20%] flex flex-wrap border-solid border-2 outline-none gap-5">
+    <div className="p-5   flex flex-col justify-center items-center relative gap-2  ">
+      <div className="p-2 w-[50rem]  flex flex-wrap border-solid border-2 outline-none gap-5">
         {selectedUser.length !== 0 ? (
           <div className="flex flex-wrap gap-5">
             {selectedUser.map((user) => (
@@ -93,10 +93,10 @@ const MultiSelect = () => {
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
           placeholder="Search"
-          className="flex justify-center items-center outline-none w-full"
+          className="flex justify-center items-center outline-none w-[50rem] "
         />
       </div>
-      <ul className="flex flex-col w-[20%] max-h-[10rem] overflow-y-scroll ml-1 gap-2 text-left">
+      <ul className="flex flex-col w-[50rem]  max-h-[10rem] overflow-y-scroll ml-1 gap-2 text-left">
         {suggestions?.map((user) => {
           return selectedUserSet.has(user.id) ? (
             <></>
