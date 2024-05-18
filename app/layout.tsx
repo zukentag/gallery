@@ -4,6 +4,8 @@ import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
+import { Suspense } from "react";
+import Loading from "./components/loading";
 
 const spaceGrotesk = Space_Grotesk({ subsets: ["latin"] });
 
