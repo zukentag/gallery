@@ -4,8 +4,7 @@ import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
-import { Suspense } from "react";
-import Loading from "./components/loading";
+import Head from "next/head";
 
 const spaceGrotesk = Space_Grotesk({ subsets: ["latin"] });
 
@@ -22,7 +21,28 @@ export default function RootLayout({
   return (
     <>
       <html lang="en" suppressHydrationWarning>
-        <head />
+        <Head>
+          <title>Dev Gallery</title>
+          <meta name="description" content="Dev Gallery" />
+          <meta name="viewport" content="width=device-width, initial-scale=1" />
+          <link rel="icon" href="./favicon.ico" />
+          <script
+            async
+            src={`https://www.googletagmanager.com/gtag/js?id=${process.env.NEXT_PUBLIC_G_TAG}`}
+          />
+          <script
+            dangerouslySetInnerHTML={{
+              __html: `
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', '${process.env.NEXT_PUBLIC_G_TAG}', {
+              page_path: window.location.pathname,
+            });
+          `,
+            }}
+          />
+        </Head>
         <body className={spaceGrotesk.className}>
           <ThemeProvider
             attribute="class"
