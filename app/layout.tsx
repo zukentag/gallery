@@ -6,6 +6,7 @@ import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import Head from "next/head";
 import { SpeedInsights } from "@vercel/speed-insights/next";
+import { GoogleAnalytics } from "@next/third-parties/google";
 
 const spaceGrotesk = Space_Grotesk({ subsets: ["latin"] });
 
@@ -19,6 +20,8 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const gtag = process.env.NEXT_PUBLIC_G_TAG || "";
+
   return (
     <>
       <html lang="en" suppressHydrationWarning>
@@ -27,22 +30,6 @@ export default function RootLayout({
           <meta name="description" content="Dev Gallery" />
           <meta name="viewport" content="width=device-width, initial-scale=1" />
           <link rel="icon" href="./favicon.ico" />
-          <script
-            async
-            src={`https://www.googletagmanager.com/gtag/js?id=${process.env.NEXT_PUBLIC_G_TAG}`}
-          />
-          <script
-            dangerouslySetInnerHTML={{
-              __html: `
-            window.dataLayer = window.dataLayer || [];
-            function gtag(){dataLayer.push(arguments);}
-            gtag('js', new Date());
-            gtag('config', '${process.env.NEXT_PUBLIC_G_TAG}', {
-              page_path: window.location.pathname,
-            });
-          `,
-            }}
-          />
         </Head>
         <body className={spaceGrotesk.className}>
           <ThemeProvider
@@ -56,7 +43,8 @@ export default function RootLayout({
             <Footer />
           </ThemeProvider>
           <SpeedInsights />
-        </body>
+        </body>{" "}
+        <GoogleAnalytics gaId={gtag} />
       </html>
     </>
   );
