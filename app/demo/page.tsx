@@ -1,5 +1,5 @@
 "use client";
-import React, { ReactElement, useState } from "react";
+import React, { ReactElement, useEffect, useRef, useState } from "react";
 import components from "../components/page";
 import { Button } from "@/components/ui/Button";
 
@@ -32,55 +32,114 @@ const CheckoutComponentsData: StepsData[] = [
 const CheckoutStepper: React.FC<CheckoutStepperProps> = ({ stepsData }) => {
   const [currentStep, setCurrentStep] = useState(1);
   const [isCompleted, setIsCompleted] = useState(false);
+  const [margins, setMargins] = useState({
+    marginLeft: 0,
+    marginRight: 0,
+  });
+  const stepRef = useRef<(HTMLDivElement | null)[]>([]);
 
+  const ActiveComponenet = stepsData[currentStep - 1]
+    ? stepsData[currentStep - 1].component
+    : () => <></>;
+
+  const calculateProgressWidth = () => {
+    return ((currentStep - 1) / (stepsData.length - 1)) * 100;
+  };
+
+  useEffect(() => {
+    setMargins({
+      marginLeft: Number(stepRef.current[0]?.offsetWidth) / 2,
+      marginRight:
+        Number(stepRef.current[stepsData.length - 1]?.offsetWidth) / 2,
+    });
+    console.log(Number(stepRef.current[0]?.offsetWidth) / 2);
+  }, [stepRef.current]);
   return (
     <div className=" p-5 flex flex-col">
-      <div className=" flex justify-center items-center gap-[20%]">
+      <div className=" flex justify-center items-center relative gap-[20%]">
         {stepsData.map((step, ind) => {
           return (
             <div
               key={step.name}
-              className="flex flex-col justify-center items-center gap-2"
+              ref={(el) => {
+                stepRef.current[ind] = el;
+              }}
+              className="flex flex-col justify-center items-center gap-2 z-20"
             >
               <div
-                className={`w-10 h-10 flex justify-center items-center rounded-full border-2 z-10 ${
+                className={`w-10 h-10 flex justify-center items-center rounded-full border-2 z-50 ${
                   currentStep === ind + 1
                     ? "bg-black text-white dark:bg-white dark:text-black"
                     : ""
+                } ${
+                  currentStep > ind + 1 || isCompleted
+                    ? "bg-green-500 text-white "
+                    : ""
                 }`}
               >
-                {ind + 1}
+                {currentStep > ind + 1 || isCompleted ? `✔` : ind + 1}
               </div>
               <div>{step.name}</div>
             </div>
           );
         })}
-      </div>
-      <div className="flex mt-5 justify-around">
-        <Button
-          disabled={currentStep === 1 || currentStep === stepsData.length}
-          className={`w-20 ${
-            currentStep === 1 || currentStep === stepsData.length
-              ? "opacity-0"
-              : ""
-          }`}
-          onClick={() => setCurrentStep((prevStep) => prevStep - 1)}
-        >
-          Previous
-        </Button>
 
-        <Button
-          className="w-20"
-          onClick={() => {
-            if (currentStep <= stepsData.length) {
-              setCurrentStep((prevStep) => prevStep + 1);
-            } else {
-              setCurrentStep(1);
-            }
+        <div
+          className="absolute z-10 bg-gray-50 items-center h-2 top-5 "
+          style={{
+            width: `calc(100% - ${margins.marginLeft + margins.marginRight}%)`,
+            marginLeft: margins.marginLeft,
+            marginRight: margins.marginRight,
           }}
         >
-          {currentStep === stepsData.length ? "Finish" : "Next"}
-        </Button>
+          <div
+            className={`h-full w-fit bg-green-500 transition duration-200 ease-in`}
+            style={{ width: `${calculateProgressWidth()}%` }}
+          ></div>
+        </div>
+      </div>
+      <div className="flex justify-center items-center mt-5">
+        <ActiveComponenet />
+      </div>
+      <div className="flex mt-5 justify-around">
+        {!isCompleted ? (
+          <>
+            <Button
+              disabled={currentStep === 1}
+              className={`w-20  `}
+              onClick={() => setCurrentStep((prevStep) => prevStep - 1)}
+            >
+              Previous
+            </Button>
+            <Button
+              className="w-20"
+              onClick={() => {
+                setCurrentStep((prevStep) => {
+                  if (prevStep === stepsData.length) {
+                    setIsCompleted(true);
+                    return prevStep;
+                  } else {
+                    return prevStep + 1;
+                  }
+                });
+              }}
+            >
+              Next
+            </Button>
+          </>
+        ) : (
+          <>
+            <Button
+              className="w-20"
+              onClick={() => {
+                setCurrentStep(1);
+                setIsCompleted(false);
+              }}
+            >
+              Finish
+            </Button>
+          </>
+        )}
       </div>
     </div>
   );

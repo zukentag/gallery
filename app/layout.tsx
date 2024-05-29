@@ -43,7 +43,7 @@ export default function RootLayout({
             <Footer />
           </ThemeProvider>
           <SpeedInsights />
-        </body>{" "}
+        </body>
         <GoogleAnalytics gaId={gtag} />
       </html>
     </>
