@@ -43,6 +43,7 @@ export function ThreeDCardDemo({
             width="500"
             className="h-[10rem] w-full object-cover rounded-xl group-hover/card:shadow-xl"
             alt="thumbnail"
+            layout="responsive"
           />
         </CardItem>
         <div className="flex justify-center items-center mt-20">
