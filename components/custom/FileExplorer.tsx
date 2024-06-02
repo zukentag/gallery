@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useState } from "react";
-import { v4 as uuidv4 } from "uuid";
 
 interface Explorer {
   itemId: string;
@@ -30,7 +29,7 @@ const useTraverseTree = () => {
   }) => {
     if (tree.itemId === itemId && tree.isFolder) {
       tree.items?.unshift({
-        itemId: uuidv4(),
+        itemId: new Date().toISOString(),
         name,
         isFolder,
         items: [],
@@ -291,7 +290,7 @@ const Folder: React.FC<{
 
 const FileExplorer: React.FC = () => {
   const [explorerData, setExplorerData] = useState<Explorer>({
-    itemId: uuidv4(),
+    itemId: new Date().toISOString(),
     name: "Root",
     isFolder: true,
     items: [],
