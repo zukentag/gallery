@@ -19,7 +19,7 @@ import Image from "next/image";
 export default function Page() {
   const plugin = useRef(
     Autoplay({
-      delay: 2000,
+      delay: 1000,
       stopOnInteraction: false,
       stopOnMouseEnter: false,
       stopOnFocusIn: false,
@@ -83,7 +83,7 @@ export default function Page() {
               {componentArray.map((c, index) => (
                 <CarouselItem
                   key={index}
-                  className="flex flex-col justify-center items-center w-full min-h-[60vh] overflow-hidden"
+                  className="flex flex-col justify-center items-center w-full min-h-[60vh] max-h[60vh] overflow-hidden"
                 >
                   <CardContainer className="w-full sm:w-[90%]">
                     <CardBody className="bg-gray-50 relative group/card w-full md:w-[30rem] sm:w-[30rem] h-auto rounded-xl p-6 border  ">
@@ -96,7 +96,7 @@ export default function Page() {
                       <CardItem
                         as="p"
                         translateZ="60"
-                        className="text-neutral-500 text-sm max-w-sm mt-2 dark:text-neutral-300"
+                        className="text-black text-sm max-w-sm mt-2 "
                       >
                         {c.description}
                       </CardItem>

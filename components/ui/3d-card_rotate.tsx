@@ -41,7 +41,7 @@ export function ThreeDCardDemo({
             src={image}
             height="500"
             width="500"
-            className="h-[10rem] w-full object-cover rounded-xl group-hover/card:shadow-xl"
+            className="min-h-[12rem] w-full object-cover rounded-xl group-hover/card:shadow-xl"
             alt="thumbnail"
             layout="responsive"
           />
