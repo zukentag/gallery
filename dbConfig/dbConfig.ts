@@ -5,18 +5,23 @@ const mongoUrl = process.env.MONGO_URI || "";
 export async function connectDb() {
   try {
     console.log("-------------->", "connecting");
-    mongoose.connect(mongoUrl);
+
+    await mongoose.connect(mongoUrl, {
+      ssl: true,
+      tlsAllowInvalidCertificates: true,
+    });
+
     const connection = mongoose.connection;
-    console.log("-------------->", connection);
+
     connection.on("connected", () => {
-      console.log("Mongo Db Connected");
+      console.log("MongoDB Connected");
     });
 
     connection.on("error", (err) => {
-      console.log("Mongo Db Connection Error", err);
-      process.exit();
+      console.error("MongoDB Connection Error", err);
+      process.exit(1);
     });
   } catch (error) {
-    console.log("Error while connection to DB :  ", error);
+    console.error("Error while connecting to DB:", error);
   }
 }

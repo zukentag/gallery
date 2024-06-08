@@ -13,3 +13,12 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }
+export async function POST(request: NextRequest) {
+  try {
+    const reqBody = await request.json();
+
+    return NextResponse.json({ data: reqBody }, { status: 200 });
+  } catch (error: any) {
+    return NextResponse.json({ error: error.message }, { status: 500 });
+  }
+}
