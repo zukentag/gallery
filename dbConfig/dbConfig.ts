@@ -4,8 +4,6 @@ const mongoUrl = process.env.MONGO_URI || "";
 
 export async function connectDb() {
   try {
-    console.log("-------------->", "connecting");
-
     await mongoose.connect(mongoUrl, {
       ssl: true,
       tlsAllowInvalidCertificates: true,
@@ -14,11 +12,11 @@ export async function connectDb() {
     const connection = mongoose.connection;
 
     connection.on("connected", () => {
-      console.log("MongoDB Connected");
+      console.log("-----------> MongoDB Connected");
     });
 
     connection.on("error", (err) => {
-      console.error("MongoDB Connection Error", err);
+      console.error("---------> MongoDB Connection Error", err);
       process.exit(1);
     });
   } catch (error) {
