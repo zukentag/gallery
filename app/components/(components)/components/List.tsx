@@ -1,9 +1,27 @@
 import { ScrollArea } from "@/components/ui/scroll-area";
-import componentsData from "@/data/common/componentsData";
 import socialsData from "@/data/common/socialsAccounts";
 import Link from "next/link";
+import axios from "axios";
+import { useState, useEffect } from "react";
 
-export default function List() {
+export default async function List() {
+  const [listData, setListData] = useState([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get("/api/components");
+        if (response) {
+          setListData(response.data);
+        }
+      } catch (error) {
+        console.log("error while fetching components data", error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
   return (
     <div>
       <ScrollArea className="h-[100vh] w-[90%] rounded-md border">
@@ -11,12 +29,13 @@ export default function List() {
           <span className="font-bold text-black dark:text-white">
             All Components
           </span>
-          {componentsData.map((item, ind) => {
+          {listData.map((item) => {
+            const { title, id } = item;
             return (
               <>
-                <Link key={ind} href={`/components/${item.id}`}>
+                <Link key={id} href={`/components/${id}`}>
                   <div className="text-[1rem] mb-2 text-slate-500 hover:text-green-500 cursor-pointer hover:translate-x-2 mt-1">
-                    {item.title}
+                    {title}
                   </div>
                 </Link>
               </>

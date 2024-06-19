@@ -8,9 +8,8 @@ connectDb();
 export async function GET(request: NextRequest) {
   try {
     const componentData = await Component.find({}).lean();
-    console.log(componentData);
 
-    return NextResponse.json({ data: componentData }, { status: 200 });
+    return NextResponse.json(componentData, { status: 200 });
   } catch (error: any) {
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
