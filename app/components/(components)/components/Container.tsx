@@ -1,25 +1,44 @@
 "use client";
 
-import React from "react";
-import Link from "next/link";
+import React, { useEffect, useState } from "react";
 import { ThreeDCardDemo } from "@/components/ui/3d-card_rotate";
 import { usePathname } from "next/navigation";
 
-import componentArray from "@/data/common/componentsData";
+import axios from "axios";
+import Link from "next/link";
+import imageData from "@/data/common/imageData";
 
 export default function Container() {
+  const [containerData, setContainerData] = useState([]);
   const path = usePathname();
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get("/api/components");
+        if (response) {
+          setContainerData(response.data);
+        }
+      } catch (error) {
+        console.log("error while fetching components data", error);
+      }
+    };
+
+    fetchData();
+  }, []);
   return (
     <div className="flex flex-col h-[100vh] overflow-x-hidden  overflow-y-scroll no-scrollbar">
       <div className="grid grid-cols-1 lg:grid-cols-2 items-center justify-center">
-        {componentArray.map((c, index) => {
+        {containerData.map((c, index) => {
+          const { id, title, description, image } = c;
+
           return (
-            <Link key={index} href={`${path}/${c.id}`}>
+            <Link key={index} href={`${path}/${id}`}>
               <>
                 <ThreeDCardDemo
-                  title={c.title}
-                  description={c.description}
-                  image={c.image}
+                  title={title}
+                  description={description}
+                  image={imageData[image]}
                 />
               </>
             </Link>
