@@ -1,7 +1,6 @@
 import { connectDb } from "@/dbConfig/dbConfig";
-import Component from "@/models/componentModel";
-import { error } from "console";
 import { NextRequest, NextResponse } from "next/server";
+import Component from "@/models/componentModel";
 
 connectDb();
 
@@ -16,6 +15,13 @@ export async function GET(request: NextRequest) {
 }
 export async function POST(request: NextRequest) {
   try {
+    const headers = request.headers;
+    const authToken = headers.get("auth-token");
+
+    if (authToken !== process.env.AUTH_TOKEN) {
+      return NextResponse.json({ error: "Un-Authorized" }, { status: 401 });
+    }
+
     const reqBody = await request.json();
     const {
       id,
